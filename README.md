@@ -1,94 +1,110 @@
-﻿# Genki Study Resources
-Genki Study Resources is a website that offers a vast collection of exercises for practicing what is taught in [Genki: An Integrated Course in Elementary Japanese](http://genki.japantimes.co.jp/index_en). It was mainly created to help aid with self-study, as such, you can use it online or offline depending on your needs. Choose one of the links below to begin testing the Japanese you've learned in Genki!
+# About Tools
+This folder contains useful snippets for Genki Study Resources. They're not to be installed on the website directly, so as such this folder is more of a toolbox that you open when you need to get a certain job done. Any snippets present in this folder will be explained below.
 
 
-**Online Version:** [2nd Edition](https://sethclydesdale.github.io/genki-study-resources/) | [3rd Edition](https://sethclydesdale.github.io/genki-study-resources/lessons-3rd/)
+### link-grabber.js
+This script is for use on the index page where all the exercises are listed. It grabs all the exercise links and parses them into a neat little array. It should be executed in your console while viewing the index page.
 
-**Offline Version:** [download](https://github.com/SethClydesdale/genki-study-resources/archive/master.zip)
+The resulting stringified array should be copied to your clipboard, if not, copy the output. Once the array is copied it can be used to update the exercise list in the main js file, javascript.js. (one dir. up from this folder) Scroll towards the bottom where the page specific functions are and find the **exercises** array. Delete it's contents and replace them with the new exercise array that you generated before, using this snippet. Doing so will ensure that the correct prev/next exercises are shown when viewing an exercise.
 
------
-
-**Quick Links**
-- [Using the Offline Version](#using-the-offline-version)
-- [Keyboard Shortcuts](#keyboard-shortcuts)
-- [Suggestions, Feedback, Bug Reports](#suggestions-feedback-bug-reports)
-- [Resources for Studying Japanese](#resources-for-studying-japanese)
-- [Special Thanks](#special-thanks)
-- [Donate](#donate)
+This should only need to be done whenever new exercises are added to the index.
 
 
-### Using the Offline Version
-If you're using the offline version you'll have to unzip the files. Once you've done that, you can access all the study resources by opening any of the [**index.html**](https://i62.servimg.com/u/f62/18/21/41/30/captur11.png) files in the browser of your choice. It should have the same experience as the online version, however, whenever new exercises/lessons are added they will not be available; you'll have to download the latest version of the repository to get them.
+### vocab-verifier.js
+This script is used for verifying if the words in a vocabulary (type : 'drag') exercise have been added to the dictionary or not. Useful for finding words that are missing in the dictionary so that we may add them.
 
-**If icons are broken:** If you use Firefox and icons appear broken, then please see [this topic](https://sethclydesdale.github.io/genki-study-resources/help/broken-icons/) to resolve the issue.
+**How to use:** Add ?debug to the end of the URL while viewing a vocab exercise. This will enable debug mode. Once enabled, simply paste this script in your console and hit enter. It should bring up a log with results for each search. If no results are found, the log will be displayed in yellow, letting you know you should investigate further before adding the definition to the dictionary.
 
-**If settings will not save:** If your settings will not save, such as furigana preference or dark mode, please see [this topic](https://sethclydesdale.github.io/genki-study-resources/help/stuck-loading/) for resolving the issue.
-
-
-### Keyboard Shortcuts
-Genki Study Resources supports a few keyboard shortcuts which you can use to make things easier.
-
-#### Global
-Shortcuts that can be used anywhere.
-
-| Shortcut | Description |
-| -------- | ----------- |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>D</kbd> | Toggle Dark Mode on/off |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>M</kbd> | Open Settings Manager |
-
-#### Exercises
-Shortcuts that can only be used in exercises.
-
-| Shortcut | Description |
-| -------- | ----------- |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>LEFT</kbd> | Navigate to the previous exercise in the lesson |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>RIGHT</kbd> | Navigate to the next exercise in the lesson |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>R</kbd> | Navigate to a random exercise |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>E</kbd> | Open/Close the Exercise List |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>Q</kbd> | Open/Close the Quick Dictionary |
-| <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>F</kbd> | Toggle Furigana on/off |
+**Further verification:** Before a definition is added, you need to verify if the hit was a false positive or not. It's fairly simple; if the definition has special characters (e.g. '...', '~', etc..) try removing them and performing a search in the quick dictionary or a kanji only search as well. If nothing still comes up, the definition should be added to the dictionary.
 
 
-### Suggestions, Feedback, Bug Reports
-If you have any suggestions, feedback, questions, or bugs to report, feel free to [open a new discussion](https://github.com/SethClydesdale/genki-study-resources/discussions) in this repository. For alternative contact methods and detailed reporting information, please see the [report page](https://sethclydesdale.github.io/genki-study-resources/report/) for Genki Study Resources.
+### derubify.js
+This script is for converting `<ruby>` tags in text strings into plain text. It returns two strings: `<ruby>` text and `<rt>` text which can be accessed via the object keys `ruby` or `rt`. Mainly used for converting ruby strings for usage in written quizzes as answers.
+
+Syntax:
+```javascript
+'たけしさんはうちに<ruby>帰<rt>かえ</rt></ruby>ります'.derubify();
+```
+
+Return value:
+```javascript
+{
+  ruby: "たけしさんはうちに帰ります",
+  rt: "たけしさんはうちにかえります"
+}
+```
+
+Passing `1` or `true` as a param will return an input sequence for written quizzes instead.
+```javascript
+'たけしさんはうちに<ruby>帰<rt>かえ</rt></ruby>ります'.derubify(true);
+```
+
+Return value:
+```javascript
+'{たけしさんはうちに帰ります|たけしさんはうちにかえります|answer}'
+```
+
+While the examples only shows a replacement of a single ruby tag, replacements for multiple ruby tags in a string are supported automatically.
+
+**Note:** You should define the contents of this script in the console before usage.
+
+If you're using Brackets, you can use [this extension](https://github.com/SethClydesdale/brackets-rubify-text) instead.
 
 
-### Resources for Studying Japanese
+### get-char-width.js
+Calculates the width of the string, returning a number which can be used in the `width` param of written answers. Useful for when the width cannot be calculated or is not of a desired value.
 
-##### Tools
-- [Anki - SRS Flashcard App](https://apps.ankiweb.net/) (great for memorizing vocab; you can find decks for Genki [here](https://sethclydesdale.github.io/genki-study-resources/help/anki-decks/))
-- [Jisho - Online Japanese Dictionary](http://jisho.org/) (extremely useful for looking up words, kanji, etc.)
-- [KanjiTomo - Japanese OCR Program](https://www.kanjitomo.net/) (very useful for reading manga, LNs, etc.)
-- [Genki xlsx Vocab Lists](https://github.com/SethClydesdale/genki-study-resources/tree/master/resources/tools/wordlist_E-J) (these are based on the vocab in Genki/on the site -- useful for printing out/using as a quick reference)
+Syntax:
+```javascript
+'おはよう'.getCharWidth();
+```
 
-##### Websites
-- [Genki Self-study Room](http://genki.japantimes.co.jp/self_en) | [Genki Online](https://genki3.japantimes.co.jp/) (official Genki sites/resources)
-- [Tae Kim's Guide to Learning Japanese](http://www.guidetojapanese.org/learn/) (good for supplementary learning/explanations)
-- [Imabi](http://www.imabi.net/) (very useful for more advanced learning/explanations)
-- [/r/LearnJapanese Wiki](https://www.reddit.com/r/LearnJapanese/wiki/index) (additional resources, guides, etc.)
+Return value: `70`
+
+Return value usage example: `{おはよう||width:70}`
+
+**Note:** You should define the contents of this script in the console before usage.
 
 
-### Special Thanks
-Genki Study Resources was made possible thanks to...
-- [The Japan Times](https://bookclub.japantimes.co.jp/en/), Eri Banno, Yoko Ikeda, Yutaka Ohno, Chikako Shinagawa, and Kyoko Tokashiki for Genki: An Integrated Course in Elementary Japanese.
-- Noriko Udagawa and Reiko Maruyama for some Illustrations that were used.
-- [DavidBurela](https://github.com/DavidBurela) for gifting me the 3rd Edition textbook and workbook of Genki I.
-- [Maarten Jacobs](https://github.com/maartenJacobs) for gifting me the 3rd Edition textbook and workbook of Genki II.
-- **Everyone** who donated, as I was able to purchase the Answer Key for the 3rd Edition thanks to your support.
-- [Patrick Roberts](https://github.com/patrickroberts) for [his help with an algorithm](https://stackoverflow.com/a/59337819/12502093) that helped make mixed kana/kanji answers possible in written quizzes.
-- [Dominik Klein](https://github.com/asdfjkl) for [his help with adding new recognition patterns](https://github.com/asdfjkl/kanjicanvas/issues/1) for the stroke order exercises.
-- [Ronserruya](https://github.com/Ronserruya) for the [Anki Decks and Deck Maker script](https://github.com/SethClydesdale/genki-study-resources/pull/89).
-- [RealFakeAccount](https://github.com/RealFakeAccount) for the [xlsx wordlist generator](https://github.com/SethClydesdale/genki-study-resources/pull/109).
-- [sasagami358](http://sasagami358.blog.fc2.com/blog-entry-593.html) for the hiragana and katakana stroke order charts.
-- Everyone who helped support or contribute to this project, whether it was on GitHub or outside of it.
+### jisho-dupe-checker.js
+Checks for duplicate entries in the dictionary so that they can either be merged or removed. Execute this script in the console while viewing the [dictionary](https://sethclydesdale.github.io/genki-study-resources/lessons/appendix/dictionary/) to check for any dupes.
 
-The following resources were used in this project. I couldn't have done it without them, so check them out!
-- [Font-Awesome](https://github.com/FortAwesome/Font-Awesome) for the awesome icons.
-- [dragula](https://github.com/bevacqua/dragula) for the simple drag and drop.
-- [easytimer.js](https://github.com/albert-gonzalez/easytimer.js) for the super easy timer.
-- [Kanji Canvas](https://github.com/asdfjkl/kanjicanvas) for the stroke order exercises.
-- [Noto CJK](https://www.google.com/get/noto/help/cjk/) and [Sawarabi Gothic](https://fonts.google.com/specimen/Sawarabi+Gothic) for the fonts used in the Hiragana/Katakana stroke order exercises.
-- [Genanki](https://github.com/kerrickstaley/genanki) for the simple package to create Anki decks
+Considering how huge it is, we may end up making duplicate entries from time to time. So this script helps ensure the dictionary word count stays accurate, while delegating the tedious job of checking to robots!
+ 
+ 
+ ### anki_decks_maker.py
+ * Requires python 3.6+ with the [genanki](https://pypi.org/project/genanki) pkg installed  
+ 
+ Create [Anki](https://apps.ankiweb.net/) flashcards decks to memorise vocabulary,
+ each card that is created is tagged with it's lesson number, type, and category (e.g Lesson_1, Vocabulary, Family) 
+ 
+ ```shell script
+python3 anki_decks_maker.py <path_to_lessons_folder>
 
-### Donate
-Please see the [Donate page](https://sethclydesdale.github.io/genki-study-resources/donate/) for ways to support my work.
+# For example: 
+python3 anki_decks_maker.py ../../lessons-3rd
+python3 anki_decks_maker.py ../../lessons
+```
+
+You can also generate decks by executing `anki_decks_maker-run.bat` and typing either `2nd` or `3rd` to generate a deck for that edition.
+ 
+All of the decks created are currently available under the [decks](decks/) folder
+
+
+### wordlist_E-J.py
+ * Requires python 3.6+.
+ 
+ Create xlsx wordlist with words and their English meaning to memorise vocabulary,
+
+ 
+ ```shell script
+python3 wordlist_E-J.py <path_to_lessons_folder>
+
+# For example: 
+python3 wordlist_E-J.py ../../lessons-3rd
+python3 wordlist_E-J.py ../../lessons
+```
+
+You can also generate decks by executing `wordlist_E-J-run.bat` and typing either `2nd` or `3rd` to generate a deck for that edition.
+ 
+All of the lists created are currently available under the [wordlists_E-J](wordlists_E-J/) folder
